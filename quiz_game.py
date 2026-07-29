@@ -126,7 +126,15 @@ class QuizGame:
     # ─────────────────────────────────────────────────────────
     # 3. 퀴즈 목록
     # ─────────────────────────────────────────────────────────
-
+    def list_quizzes(self):
+        if not self.quizzes:
+            print("\n등록된 퀴즈가 없습니다.")
+            return
+        print(f"\n📋 등록된 퀴즈 목록 (총 {len(self.quizzes)}개)")
+        print("-" * 40)
+        for i, quiz in enumerate(self.quizzes, start=1):
+            print(f"[{i}] {quiz.question}")
+        print("-" * 40)
 
     # ─────────────────────────────────────────────────────────
     # 4. 점수 확인
