@@ -141,3 +141,22 @@ my-quiz-game/
 ### 트러블슈팅 3: Ctrl+C 시 빨간 에러가 그대로 노출됨
 - **원인:** `KeyboardInterrupt`/`EOFError`를 처리하지 않으면 파이썬이 트레이스백을 출력하며 비정상 종료
 - **해결:** `run()`의 메인 루프를 `try/except (KeyboardInterrupt, EOFError)`로 감싸 저장 후 안전 종료
+
+### 트러블슈팅 4: 로컬에서 만든 브랜치가 GitHub에 안 보이고, 병합 기록도 안 남음
+- **문제:** `git checkout -b feature/play`로 브랜치를 만들어 작업했는데 GitHub 저장소에는 브랜치가 보이지 않았고, main에 병합한 뒤에도 Network 그래프에 브랜치가 갈라졌다 합쳐진 흔적이 남지 않았다.
+- **원인 가설:** ① `checkout`으로 만든 브랜치는 로컬에만 존재하며 push하기 전까지 원격(GitHub)에 생성되지 않는다. ② 병합이 fast-forward로 처리되면 머지 커밋이 생기지 않아 그래프에 갈라짐이 기록되지 않는다.
+- **확인:** `git branch`(로컬)에는 `feature/play`가 있으나 `git branch -r`(원격)에는 없었음 → 브랜치가 로컬에만 있었음을 확인.
+- **해결:**
+  1. 브랜치 생성 시 `-u`(`--set-upstream`)로 원격에도 함께 만들고 추적 연결한다.
+```bash
+     git push -u origin feature/play
+```
+     이후 그 브랜치에서는 `git push`/`git pull`만 쳐도 원격 같은 브랜치로 오간다.
+  2. 병합은 `--no-ff`로 머지 커밋을 강제해 그래프에 병합 흔적을 남긴다.
+```bash
+     git checkout main
+     git merge --no-ff feature/play -m "Merge: 퀴즈 풀기 기능 병합"
+     git push
+```
+- **확인(결과):** GitHub **Insights → Network** 그래프에 브랜치가 갈라졌다 합쳐진 선이 표시되고, 커밋 목록에 머지 커밋이 남는다. 로컬에서는 `git log --oneline --graph --all`로 동일한 이력을 확인할 수 있다.
+- **비고:** `checkout`·`pull`·`clone`은 "가져오거나 이동하는" 동작이라 GitHub 이력에는 남지 않는다. 이 명령들의 수행 증거는 **터미널 실행 화면 스크린샷**으로 남긴다. 병합 기록을 가장 뚜렷하게 남기려면 브랜치를 push한 뒤 GitHub에서 **Pull Request로 병합**하면 Pull requests 탭에도 이력이 보존된다.
