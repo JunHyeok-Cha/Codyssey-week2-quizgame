@@ -64,7 +64,37 @@ class QuizGame:
     # ─────────────────────────────────────────────────────────
     # 1. 퀴즈 풀기
     # ─────────────────────────────────────────────────────────
+    def play(self):
+        if not self.quizzes:      # 리스트가 비어있으면 (퀴즈가 하나도 없으면)
+            print("\n등록된 퀴즈가 없습니다. 먼저 퀴즈를 추가하세요.")
+            return
 
+        total = len(self.quizzes)
+        print(f"\n📝 퀴즈를 시작합니다! (총 {total}문제)")
+        score = 0
+
+        for i, quiz in enumerate(self.quizzes, start=1):
+            print("\n" + "-" * 40)
+            quiz.show(index=i)
+            picked = self.ask_int("정답 입력 (1-4): ", 1, 4)
+            if quiz.is_correct(picked):
+                print("✅ 정답입니다!")
+                score += 1
+            else:
+                print(f"❌ 오답입니다. 정답은 {quiz.answer}번.")
+
+        # 점수 = 맞힌 문제 수를 100점 만점으로 환산
+        points = round(score / total * 100)
+        print("\n" + "=" * 40)
+        print(f"🏆 결과: {total}문제 중 {score}문제 정답! ({points}점)")
+
+        # 최고점수 갱신 판단
+        if points > self.best_score:
+            self.best_score = points
+            print("🎉 새로운 최고 점수입니다!")
+        print("=" * 40)
+
+        self.save()   # 점수가 바뀌었을 수 있으니 저장
    
     # ─────────────────────────────────────────────────────────
     # 2. 퀴즈 추가
