@@ -148,6 +148,9 @@ class QuizGame:
     # ─────────────────────────────────────────────────────────
     # 저장: Quiz 객체 → dict 로 바꿔 storage에 넘긴다
     # ─────────────────────────────────────────────────────────
+    def save(self):
+        raw = [q.to_dict() for q in self.quizzes]
+        storage.save_state(raw, self.best_score)
 
 
     # ─────────────────────────────────────────────────────────
