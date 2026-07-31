@@ -265,23 +265,13 @@ self.quizzes = [Quiz.from_dict(q) for q in raw_quizzes]  # 복원: dict → 객�
 
 ## 9. 트러블슈팅
 
-### 1. 한글이 `state.json`에 `\uXXXX`로 깨져 저장됨
+### 1. 숫자 입력 검증을 isdigit()에서 try/except로 전환
+- **문제:** `raw.lstrip("-").isdigit()`로 숫자 여부를 검사했으나, 음수 부호를 직접 떼어내야 하고 `"²"` 같은 유니코드 숫자 문자는 `isdigit()`가 True를 주지만 `int()`에서는 예외가 발생하는 허점이 있었다.
+- **원인 가설:** `isdigit()`는 순수 0~9 문자만 검사해 `int()`가 실제로 변환 가능한 범위와 정확히 일치하지 않는다.
+- **해결:** 변환 가능 여부를 직접 판정하는 대신 `int(raw)`를 `try/except ValueError`로 감싸, `int()`가 처리하는 형식을 그대로 검증 기준으로 삼았다.
+- **결과:** 부호 처리용 `lstrip("-")` 땜빵이 사라지고, 과제 요구사항인 try/except 예외 처리를 입력 단에서 실제로 활용하게 되었다.
 
-- **원인:** `json.dump`의 기본값 `ensure_ascii=True`가 비ASCII 문자를 이스케이프
-- **해결:** `json.dump(data, f, ensure_ascii=False, indent=2)`
-
-### 2. 파일이 깨지면 프로그램이 죽음
-
-- **원인:** 손상된 JSON을 `json.load` 하면 `JSONDecodeError` 발생
-- **해결:** `try/except`로 잡아 기본 퀴즈로 복구
-
-```python
-except (json.JSONDecodeError, KeyError, OSError) as e:
-    print(f"⚠️ 데이터 파일이 손상되어 기본 퀴즈로 복구합니다. ({e})")
-    return list(DEFAULT_QUIZZES), 0
-```
-
-### 3. `Ctrl+C` 시 빨간 에러가 그대로 노출됨
+### 2. `Ctrl+C` 시 빨간 에러가 그대로 노출됨
 
 - **원인:** `KeyboardInterrupt` / `EOFError`를 처리하지 않으면 비정상 종료되고 점수도 날아감
 - **해결:** 메인 루프를 감싸 **저장 후** 종료
@@ -294,7 +284,7 @@ except (KeyboardInterrupt, EOFError):
 
 > 예외 처리를 "죽지 않게 하는 것"을 넘어 **"데이터를 잃지 않게 하는 것"** 에 쓴 사례다.
 
-### 4. 로컬 브랜치가 GitHub에 안 보이고, 병합 기록도 안 남음
+### 3. 로컬 브랜치가 GitHub에 안 보이고, 병합 기록도 안 남음
 
 **증상** — `git checkout -b feature/play`로 작업했는데 GitHub에 브랜치가 없었고, 병합 후에도 Network 그래프에 갈라진 흔적이 없었다.
 
@@ -319,7 +309,7 @@ git push
 
 **결과** — GitHub **Insights → Network**에 갈라졌다 합쳐진 선이 표시되고 머지 커밋이 남는다. 로컬에서는 `git log --oneline --graph --all`로 확인한다.
 
-> `checkout` · `pull` · `clone`은 커밋을 만들지 않아 GitHub 이력에 남지 않는다. 수행 증거는 **터미널 스크린샷**으로 남긴다.
+> `checkout` · `pull` · `clone` 수행 증거는 **터미널 스크린샷**으로 남긴다.
 
 ---
 
