@@ -38,10 +38,11 @@ class QuizGame:
             if raw == "":
                 print("⚠️ 빈 입력입니다. 다시 입력하세요.")
                 continue
-            if not raw.lstrip("-").isdigit():   # 숫자로 변환 가능한지 확인
+            try:
+                value = int(raw)          # 변환 시도
+            except ValueError:            # 숫자가 아니면 여기로
                 print("⚠️ 숫자만 입력할 수 있습니다.")
                 continue
-            value = int(raw)
             if value < low or value > high:
                 print(f"⚠️ {low}~{high} 사이의 숫자를 입력하세요.")
                 continue
