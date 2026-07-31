@@ -1,0 +1,11 @@
+# 파이썬 캐시
+__pycache__/
+*.pyc
+
+# 로컬 데이터 (코드에 기본 퀴즈가 내장돼 있어 없어도 실행됨)
+state.json
+
+# OS / 에디터
+.DS_Store
+.vscode/
+.idea/
