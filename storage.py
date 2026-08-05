@@ -16,39 +16,39 @@ STATE_FILE = "state.json"
 
 
 # 파일이 아예 없을 때(첫 실행) 사용할 기본 퀴즈 데이터.
-# 주제: '기초 컴퓨터/개발 상식' — 5개 이상 요구 충족.
 DEFAULT_QUIZZES = [
     {
-        "question": "HTTP 상태 코드 404가 의미하는 것은?",
-        "choices": ["서버 내부 오류", "요청 성공", "찾을 수 없음", "권한 없음"],
-        "answer": 3,
+      "question": "마지막으로 인피니티 스톤을 이용해 핑거스냅을 한 인물은?",
+      "choices": [
+        "타노스",
+        "헐크",
+        "아이언맨",
+        "토르"
+      ],
+      "answer": 3
     },
     {
-        "question": "다음 중 파이썬에서 '변경 불가능(immutable)'한 자료형은?",
-        "choices": ["list", "dict", "set", "tuple"],
-        "answer": 4,
+      "question": "인피니티 스톤의 갯수는?",
+      "choices": [
+        "3개",
+        "4개",
+        "5개",
+        "6개"
+      ],
+      "answer": 4
     },
     {
-        "question": "Git에서 변경 이력을 기록으로 확정하는 명령은?",
-        "choices": ["git add", "git commit", "git status", "git clone"],
-        "answer": 2,
-    },
-    {
-        "question": "1 바이트(byte)는 몇 비트(bit)인가?",
-        "choices": ["4", "8", "16", "32"],
-        "answer": 2,
-    },
-    {
-        "question": "JSON에서 데이터를 담는 두 가지 기본 구조는?",
-        "choices": ["객체와 배열", "함수와 변수", "클래스와 객체", "행과 열"],
-        "answer": 1,
-    },
-    {
-        "question": "터미널에서 현재 위치(디렉토리)를 출력하는 명령은?",
-        "choices": ["ls", "cd", "pwd", "mkdir"],
-        "answer": 3,
-    },
+      "question": "가디언즈 오브 갤럭시에서 가장 많이 나오는 대사는?",
+      "choices": [
+        "가모라",
+        "I am Groot",
+        "Hey, Peter",
+        "I am Iron Man"
+      ],
+      "answer": 2
+    }
 ]
+
 
 
 def load_state():
