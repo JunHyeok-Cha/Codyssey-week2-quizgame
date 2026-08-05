@@ -17,13 +17,18 @@ quiz.py
 
 
 class Quiz:
-    def __init__(self, question, choices, answer):
+    def __init__(self, question, choices, answer, hint=""):
         # __init__ 은 인스턴스가 만들어질 때 자동 호출되는 '생성자'.
         # self 는 '지금 만들어지는 이 퀴즈 자신'을 가리킨다.
-        # 아래 3줄은 넘겨받은 값을 이 인스턴스의 속성(attribute)으로 저장한다.
+        # 아래 4줄은 넘겨받은 값을 이 인스턴스의 속성(attribute)으로 저장한다.
         self.question = question          # 문제 문자열
         self.choices = choices            # 선택지 리스트 (원소 4개)
         self.answer = answer              # 정답 번호 (1~4 중 하나, int)
+        self.hint = hint                  # 힌트 문자열 (없으면 "")
+
+    def has_hint(self):
+        """이 문제에 보여줄 힌트가 있는지 True/False로 반환."""
+        return self.hint.strip() != ""
 
     def is_correct(self, user_choice):
         """사용자가 고른 번호가 정답인지 True/False로 반환."""
@@ -48,6 +53,7 @@ class Quiz:
             "question": self.question,
             "choices": self.choices,
             "answer": self.answer,
+            "hint": self.hint,
         }
 
     @staticmethod
@@ -56,5 +62,14 @@ class Quiz:
         반대로, 파일에서 읽은 dict를 다시 Quiz 객체로 되살린다.
         @staticmethod: self가 필요없는(특정 인스턴스에 속하지 않는) 함수라는 표시.
         Quiz.from_dict(d) 형태로 인스턴스 없이 바로 호출한다.
+
+        hint 는 data.get("hint", "")로 꺼낸다.
+        → 힌트 기능이 없던 시절에 저장된 state.json에는 "hint" 키가 없는데,
+          data["hint"]로 꺼내면 KeyError로 죽는다. get()은 없으면 기본값을 준다.
         """
-        return Quiz(data["question"], data["choices"], data["answer"])
+        return Quiz(
+            data["question"],
+            data["choices"],
+            data["answer"],
+            data.get("hint", ""),
+        )
